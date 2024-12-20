@@ -36,7 +36,7 @@ const (
 )
 
 func (s *Server) googleOauthLogin(w http.ResponseWriter, r *http.Request) {
-	err := auth.ValidateUserJWT(w, r)
+	err := auth.ValidateUserJWT(r)
 	if err == nil {
 		err := auth.RefreshJWTToken(w, r)
 		if err != nil {
@@ -44,13 +44,13 @@ func (s *Server) googleOauthLogin(w http.ResponseWriter, r *http.Request) {
 			cookie := auth.RevokeJWTToken()
 			http.SetCookie(w, cookie)
 		} else {
-			http.Redirect(w, r, "http://localhost:5173/", http.StatusTemporaryRedirect)
+			s.temporaryRedirect(w, "http://localhost:5173/")
 			return
 		}
 	}
 	oauthState := generateStateOauthCookie(w)
 	url := googleOauthConfig.AuthCodeURL(oauthState)
-	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
+	s.temporaryRedirect(w, url)
 }
 
 func (s *Server) googleOauthLogout(w http.ResponseWriter, r *http.Request) {
@@ -97,7 +97,6 @@ func (s *Server) googleOauthCallback(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error signing JWT token:", err)
 		return
 	}
-	log.Println("Cookie:", cookie)
 	http.SetCookie(w, cookie)
 
 	// GetOrCreate User in your db.

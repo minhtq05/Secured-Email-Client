@@ -16,7 +16,7 @@ func main() {
 	server := NewServer()
 
 	router.Get("/", server.homeHandler)
-	router.Get("/hello", server.helloHandler)
+	router.With(AuthJWTTokenMiddleware).Get("/hello", server.helloHandler)
 	router.Get("/auth/google", server.googleOauthLogin)
 	router.Get("/auth/google/callback", server.googleOauthCallback)
 	router.Get("/auth/google/logout", server.googleOauthLogout)

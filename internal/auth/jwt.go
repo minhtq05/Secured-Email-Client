@@ -3,6 +3,7 @@ package auth
 import (
 	"errors"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -46,16 +47,28 @@ func RevokeJWTToken() *http.Cookie {
 	}
 }
 
-func ValidateUserJWT(w http.ResponseWriter, r *http.Request) error {
-	c, err := r.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			return errors.New("signature invalid 1")
-		}
-		return errors.New("signature invalid 2")
+func ValidateUserJWT(r *http.Request) error {
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		return errors.New("authorization header is missing")
 	}
 
-	tknStr := c.Value
+	parts := strings.Split(authHeader, " ")
+	if len(parts) != 2 || parts[0] != "Bearer" {
+		return errors.New("authorization header is malformed")
+	}
+
+	tknStr := parts[1]
+
+	// c, err := r.Cookie("token")
+	// if err != nil {
+	// 	if err == http.ErrNoCookie {
+	// 		return errors.New("signature invalid 1")
+	// 	}
+	// 	return errors.New("signature invalid 2")
+	// }
+
+	// tknStr := c.Value
 
 	claims := &Claims{}
 
