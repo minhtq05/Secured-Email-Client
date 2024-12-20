@@ -1,6 +1,8 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 type Server struct {
 }
@@ -15,4 +17,7 @@ func (s *Server) homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func (s *Server) helloHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("hello!"))
+}
+
+func (s *Server) loginHandler(w http.ResponseWriter, r *http.Request) {
 }
