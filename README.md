@@ -1,4 +1,4 @@
-# Secured Email Organizer
+# Secured Email Client
 ### Email Management Supercharged 
 
 An AI freely customizable email client. 
