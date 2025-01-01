@@ -3,34 +3,39 @@
 import { MailSidebar } from "@/components/mail-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import React from "react";
-import useAuth, { AuthProvider } from "@/hooks/use-auth";
-import { MailProvider } from "@/hooks/use-mail";
+import { AuthProvider } from "@/hooks/use-auth";
+import { EmailProvider } from "@/hooks/use-mail-provider";
 import { ThemeProvider } from "@/hooks/use-theme";
-import Modal from "react-modal";
-import { AuthenticationWrapper } from "@/components/wrapper";
-
-Modal.setAppElement("#root");
+import { AuthenticationWrapper } from "@/components/wrappers";
+import { Toaster } from "react-hot-toast";
 
 const MailLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     return (
         <html lang="en">
-            <body id="root" suppressHydrationWarning>
-                <ThemeProvider>
-                    <AuthProvider>
-                        <SidebarProvider>
-                            <MailProvider>
-                                <AuthenticationWrapper>
-                                    <div className="flex flex-row w-full">
-                                        <MailSidebar />
-                                        {children}
-                                    </div>
-                                </AuthenticationWrapper>
-                            </MailProvider>
-                        </SidebarProvider>
-                    </AuthProvider>
-                </ThemeProvider>
+            <body suppressHydrationWarning>
+                <ProvidersWrapper>
+                    <AuthenticationWrapper>
+                        <div className="flex flex-row w-full">
+                            <Toaster /> 
+                            <MailSidebar />
+                            {children}
+                        </div>
+                    </AuthenticationWrapper>
+                </ProvidersWrapper>
             </body>
         </html>
+    );
+};
+
+const ProvidersWrapper = ({ children }: { children: React.ReactNode }) => {
+    return (
+        <ThemeProvider>
+            <AuthProvider>
+                <SidebarProvider>
+                    <EmailProvider>{children}</EmailProvider>
+                </SidebarProvider>
+            </AuthProvider>
+        </ThemeProvider>
     );
 };
 

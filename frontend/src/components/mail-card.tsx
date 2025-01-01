@@ -1,26 +1,51 @@
-import useMail from "@/hooks/use-mail";
+import useEmail from "@/hooks/use-mail-provider";
 import { Email } from "@/types/emails";
 import moment from "moment";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export const MailCard = ({ email }: { email: Email }) => {
-    const { setSelectedEmail } = useMail();
+    const { setCurrentEmail } = useEmail();
 
     const handleOpenMessage = () => {
-        setSelectedEmail(email);
+        setCurrentEmail(email);
     };
 
     return (
         <div
-            className="flex flex-col rounded border border-gray-200 text-gray-400 p-4 hover:text-black hover:cursor-pointer w-full"
+            className={cn(
+                "flex flex-col shadow",
+                "rounded border border-gray-200",
+                "text-gray-400 hover:text-black",
+                "p-4 w-full",
+                "hover:cursor-pointer"
+            )}
             onClick={handleOpenMessage}
         >
-            <p>Date: {moment(email.date).format("DD.MM.YYYY SS:MM:HH")}</p>
-            <p className="font-semibold">
+            <p
+                className={cn(
+                    "flex flex-row",
+                    "text-nowrap text-ellipsis overflow-hidden whitespace-nowrap"
+                )}
+            >
+                Date: {moment(email.date).format("DD.MM.YYYY SS:MM:HH")}
+            </p>
+            <p
+                className={cn(
+                    "flex",
+                    "font-semibold text-nowrap text-ellipsis overflow-hidden whitespace-nowrap"
+                )}
+            >
                 from: '
                 {email.from.name === "" ? email.from.address : email.from.name}'
             </p>
-            <p>{email.subject}</p>
+            <p
+                className={cn(
+                    "flex",
+                    "text-nowrap text-ellipsis overflow-hidden whitespace-nowrap"
+                )}
+            >
+                {email.subject}
+            </p>
         </div>
     );
 };

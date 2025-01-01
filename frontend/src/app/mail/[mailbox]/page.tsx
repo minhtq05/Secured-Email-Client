@@ -1,28 +1,13 @@
 "use client";
 
-import { MailCard } from "@/components/mail-card";
-import { MailViewBox } from "@/components/mail-viewbox";
-import useMail from "@/hooks/use-mail";
-import useMailbox from "@/hooks/use-mailbox";
-import React from "react";
+import Mailbox from "@/components/mailbox";
+import useAuth from "@/hooks/use-auth";
+import useAxiosPrivate from "@/hooks/use-axios";
+import useFetchPrivate from "@/hooks/use-fetch";
+import React, { useEffect } from "react";
 
-const Mailbox = () => {
-    const { selectedMailbox, selectedEmail } = useMail();
-    const { emails } = useMailbox();
-
-    return (
-        <div className="w-full flex flex-row">
-            <div className="w-full flex flex-col">
-                <p>{selectedMailbox && selectedMailbox.name}</p>
-                <div className="flex flex-col gap-y-2 p-2 w-full">
-                    {emails.map((email, index) => (
-                        <MailCard email={email} key={index} />
-                    ))}
-                </div>
-            </div>
-            {selectedEmail !== null && <MailViewBox email={selectedEmail} />}
-        </div>
-    );
+const MailboxWrapper = () => {
+    return <Mailbox />;
 };
 
-export default Mailbox;
+export default MailboxWrapper;
